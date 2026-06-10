@@ -1,0 +1,376 @@
+/* --- Veiled State --- */
+:host {
+  --terminal-green: #39FF14;
+  --terminal-white: #FFFFFF;
+}
+
+:host #veiled-container {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  min-height:100vh;
+  padding:24px;
+  transition:opacity .5s ease-out;
+  background: #060606;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Scanlines effect */
+:host #veiled-container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.5) 0,
+    rgba(0, 0, 0, 0.5) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+:host #veiled-container.hidden { opacity:0; pointer-events:none; }
+
+/* Transition for fade-out effect */
+:host #veiled-container > * {
+  transition: opacity 0.4s ease-out;
+  z-index: 2;
+}
+:host #veiled-container.activating > *:not(#kao-veiled) {
+  opacity: 0;
+}
+
+/* Background formulas overlay */
+:host #veiled-container > .background-formulas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+:host .math-formula {
+  position: absolute;
+  color: var(--terminal-white);
+  font-family: 'Cambria Math', 'Times New Roman', serif;
+  font-size: 18px;
+  opacity: 0;
+  white-space: nowrap;
+  transition: opacity 1.5s linear;
+}
+
+:host .math-formula.visible {
+  opacity: 0.24;
+}
+
+:host .math-formula.fading-out {
+  opacity: 0;
+}
+
+:host .title-veiled {
+  font-family: 'Jersey 25', cursive;
+  color: var(--terminal-white);
+  font-weight: 400;
+  font-size: 88px;
+  letter-spacing: 1px;
+  line-height: 0.9;
+  min-height: 160px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+/* Blinking cursor effect */
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+:host .title-veiled::after {
+  content: '▌';
+  position: relative;
+  left: 8px; /* Slightly closer */
+  font-size: 0.8em; /* Make it smaller */
+  vertical-align: 0.05em; /* Fine-tune vertical alignment */
+  animation: blink 1s step-end infinite;
+}
+
+:host .title-veiled.typing-done::after {
+  content: none;
+  animation: none;
+}
+
+:host .badge-veiled {
+  background: none;
+  border: none;
+  color: var(--terminal-green); /* Kept green as requested */
+  font-family: 'VT323', monospace;
+  font-size: 28px;
+  margin-top: 14px;
+  margin-bottom: 12px;
+  padding: 0.35em 1.5em;
+}
+
+:host #btn-activate,
+:host #btn-mobile {
+  font-family: 'VT323', monospace;
+  background: none;
+  border: none;
+  color: var(--terminal-white);
+  scale: 1;
+  padding: 12px 24px;
+  border-radius: 0;
+  cursor: pointer;
+  font-weight: 400;
+  font-size: 32px;
+  letter-spacing: 2px;
+  margin-top: 24px;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+:host #btn-activate::before,
+:host #btn-activate::after,
+:host #btn-mobile::before,
+:host #btn-mobile::after {
+  content: '';
+  opacity: 0;
+}
+
+:host #btn-activate::before,
+:host #btn-mobile::before {
+  margin-right: 8px;
+}
+
+:host #btn-activate::after,
+:host #btn-mobile::after {
+  margin-left: 8px;
+}
+
+:host #btn-activate:hover,
+:host #btn-mobile:hover {
+  background-color: var(--terminal-white);
+  color: #000;
+}
+
+:host #btn-activate:hover::before,
+:host #btn-mobile:hover::before {
+  content: '▸';
+  opacity: 1;
+}
+
+:host #btn-activate:hover::after,
+:host #btn-mobile:hover::after {
+  content: '◂';
+  opacity: 1;
+}
+:host #btn-activate:disabled,
+:host #btn-mobile:disabled {
+  cursor: wait;
+  animation: none;
+  opacity: 0.7;
+  background-color: transparent !important;
+  color: var(--terminal-white) !important;
+}
+
+/* Special styling for the main spinning kao */
+:host #kao-veiled.kao {
+  font-size: 48px;
+  color: var(--terminal-white);
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* Generic spinning utility used by [class.spinning] binding */
+:host .spinning { animation: spin 1s linear infinite; }
+
+/* Fallback: spin when mobile flow toggles container class */
+:host #veiled-container.mobile-activating #kao-veiled.kao { animation: spin 1s linear infinite; }
+
+/* --- Activated State Base --- */
+:host .wrap { width:100%; height:100%; margin:0 auto; padding:0; position:relative; }
+:host .wrap.hidden { display:none; opacity:0; }
+:host .wrap.visible { display:block; opacity:1; transition:opacity .5s ease-in; }
+:host .footer { margin:0; color:#94a3b8; font-size:12px; padding:10px 16px; position:absolute; bottom:0; right:0; z-index: 5; }
+
+/* 3D Stage + HUD */
+:host .stage3d { position:relative; width:100%; height:100%; min-height:580px; border-top:1px solid var(--border); overflow:hidden; --bgx:30%; --bgy:20%; background:radial-gradient(1200px 600px at var(--bgx) var(--bgy), #080808 0%, #060606 60%, #040404 100%); touch-action:none; }
+:host .stage3d .css3d { position:absolute; inset:0; z-index:0; touch-action:none; }
+:host .hud { position:absolute; inset:0; pointer-events:none; z-index:10; }
+:host .hud .brand { position:absolute; top:12px; left:16px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:12px; letter-spacing:2px; text-transform:uppercase; color:#9aa4b2; }
+:host .nav-buttons { position:absolute; top:12px; right:16px; display:flex; gap:8px; pointer-events:auto; }
+:host .win98-btn {
+  background: var(--card-bg, var(--card));
+  border: 2px solid var(--terminal-green);
+  border-top-color: var(--terminal-green);
+  border-left-color: var(--terminal-green);
+  border-bottom-color: var(--border);
+  border-right-color: var(--border);
+  color: var(--ink);
+  padding: 2px 8px;
+  text-decoration: none;
+  font-family: 'Tahoma', sans-serif;
+}
+:host .win98-btn:active {
+  border-top-color: var(--border);
+  border-left-color: var(--border);
+  border-bottom-color: var(--border-strong, var(--border));
+  border-right-color: var(--border-strong, var(--border));
+  position: relative;
+  top: 1px;
+}
+:host #fps { position: absolute; bottom: 12px; left: 16px; color: #9aa4b8; font-family: ui-monospace, Menlo, monospace; font-size: 12px; }
+
+/* CSS cards used by CSS3DRenderer */
+:host ::ng-deep .card3d {
+  width:720px;
+  background:rgba(17, 17, 17, 0.75);
+  border:2px solid #1f2937;
+  border-radius:12px;
+  padding:64px 48px;
+  color:#e6edf3;
+  font-family: 'SF Pro Display', 'SF Pro Text', 'San Francisco', 'Noto Sans', 'Roboto', 'Segoe UI', 'Arial', 'Liberation Sans', 'Helvetica Neue', sans-serif;
+  font-size:42px;
+  line-height:1.5;
+  font-weight:700;
+  box-shadow:0 20px 40px rgba(0,0,0,.45);
+  transition:transform .2s ease, border-color .2s ease, box-shadow .2s ease, opacity .2s ease;
+  backdrop-filter: blur(4px);
+  position:relative;
+  overflow:hidden;
+  cursor: pointer;
+}
+:host ::ng-deep .card3d::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.18;
+  mix-blend-mode: soft-light;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120"><filter id="n" x="0" y="0"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/></filter><rect width="120" height="120" fill="white" filter="url(%23n)"/></svg>');
+  background-size: 220px 220px;
+  background-repeat: repeat;
+}
+:host ::ng-deep .card3d > * { position: relative; z-index: 1; }
+:host ::ng-deep .card3d h4 { margin:0 0 12px 0; font-size:66px; font-family: 'SF Pro Display', 'SF Pro Text', 'San Francisco', 'Noto Sans', 'Roboto', 'Segoe UI', 'Arial', 'Liberation Sans', 'Helvetica Neue', sans-serif; text-transform:uppercase; letter-spacing:1px; font-weight:900; }
+:host ::ng-deep .card3d .meta { color:#9aa4b2; font-size:42px; margin-bottom:12px; font-family: 'SF Pro Display', 'SF Pro Text', 'San Francisco', 'Noto Sans', 'Roboto', 'Segoe UI', 'Arial', 'Liberation Sans', 'Helvetica Neue', sans-serif; font-weight:600; }
+:host ::ng-deep .card3d ul { margin:6px 0 0 16px; padding:0; }
+:host ::ng-deep .card3d hr { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+:host ::ng-deep .card3d .body { max-height:0; overflow:hidden; transition:max-height .35s ease; font-size: 32px; line-height: 1.7;}
+:host ::ng-deep .card3d:hover .body { max-height:440px; }
+:host ::ng-deep .card3d.noexpand .body { max-height:none !important; overflow:visible !important; transition:none !important; }
+
+/* --- Witness Card Animation --- */
+:host ::ng-deep .witness-card {
+  width: 680px;
+  border-color: transparent;
+  background: rgba(20, 20, 22, 0.85);
+  font-size: 36px;
+  cursor: default !important;
+  display: flex;
+  flex-direction: column;
+  
+  /* Initial state: invisible with no glow */
+  opacity: 0;
+  box-shadow: none;
+}
+
+:host ::ng-deep .witness-card.visible {
+  /* Final state: fully visible with border and glow */
+  opacity: 1;
+  border-color: var(--accent);
+  box-shadow: 0 0 8px 3px #fff, 0 0 15px 7px var(--accent), 0 0 25px 15px rgba(125, 211, 252, 0.5);
+
+  /* Fast "glow up" transition */
+  transition: opacity 0.35s ease-in, 
+              border-color 0.3s ease-in,
+              box-shadow 0.4s ease-in;
+}
+
+/* This class is added after typing to fade the glow out */
+:host ::ng-deep .witness-card.dimming {
+  border-color: var(--border);
+  box-shadow: 0 10px 20px rgba(0,0,0,.3);
+
+  /* Slow "glow down" transition */
+  transition: border-color 1.5s ease-out,
+              box-shadow 1.5s ease-out;
+}
+
+:host ::ng-deep .witness-card .body {
+  max-height: none !important;
+  transition: none !important;
+}
+
+:host ::ng-deep .witness-card h4 {
+  color: var(--accent);
+  font-size: 52px;
+}
+
+:host ::ng-deep .mono { font-family: 'SF Mono', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace; font-size: 56px; font-weight: 900; }
+:host ::ng-deep .kao {
+  font-size: 42px !important;
+  font-weight: 900;
+  font-family: 'SF Pro Display', 'SF Pro Text', 'San Francisco', 'Noto Sans', 'Roboto', 'Segoe UI', 'Arial', 'Liberation Sans', 'Helvetica Neue', sans-serif;
+  color: #fff;
+  letter-spacing: 1.5px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  text-shadow: 0 0 8px rgba(0,0,0,0.7);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* --- Responsive adjustments for Veiled State --- */
+@media (max-width: 768px) {
+  :host .title-veiled {
+    font-size: 74px;
+    min-height: 140px;
+    margin-bottom: 10px;
+  }
+
+  :host .badge-veiled {
+    font-size: 24px;
+    margin-top: 12px;
+    margin-bottom: 10px;
+    padding: 0.4em 1.45em;
+  }
+
+  :host #btn-activate,
+  :host #btn-mobile {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  :host .title-veiled {
+    font-size: 36px;
+    display: flex;
+    align-items: flex-end;
+    min-height: 72px;
+    margin-bottom: 8px;
+  }
+
+  :host .badge-veiled {
+    font-size: 18px;
+    margin-top: 10px;
+    margin-bottom: 8px;
+    padding: 0.5em 1.3em;
+  }
+
+  :host #btn-activate,
+  :host #btn-mobile {
+    font-size: 22px;
+    padding: 10px 20px;
+  }
+}

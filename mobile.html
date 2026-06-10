@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7LSEN9HJPK"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-7LSEN9HJPK');
+  </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Minyh | Interactive Portfolio</title>
+  <meta name="description" content="Portfolio 3D of Minyh">
+  <link rel="icon" type="image/x-icon" href="src/assets/20250910_091520.ico">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <!-- Google Fonts for Terminal Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jersey+25&family=VT323&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+
+  <style>
+    /* Unified palette (synced with main site) */
+    :root {
+      --bg:#060606;              /* base background from main */
+      /* Match PC Version glassy card tone */
+      --card: rgba(17, 17, 17, 0.75); /* content surface */
+      --card-bg: var(--card);    /* mobile cards follow main card */
+      --ink:#e6edf3;             /* primary text */
+      --muted:#9aa4b2;           /* secondary text */
+      --accent:#7dd3fc;          /* highlight */
+      --ok:#22c55e;              /* success */
+      --warn:#f59e0b;            /* warning */
+      --hot:#f43f5e;             /* danger */
+      --terminal-green:#39FF14;  /* terminal accent */
+      --border:#1f2937;          /* base border */
+      --border-strong:#334155;   /* elevated border */
+      --btn-bg:#121212;
+      /* Background gradient stops (synced to --bg) */
+      --bg-grad1: var(--bg);
+      --bg-grad2: var(--bg);
+      --bg-grad3: var(--bg);
+    }
+    /* Prefer subtle gradient if color-mix is supported */
+    @supports (background: color-mix(in srgb, black, white)) {
+      :root {
+        --bg-grad1: color-mix(in srgb, var(--bg), white 3%);
+        --bg-grad2: var(--bg);
+        --bg-grad3: color-mix(in srgb, var(--bg), black 6%);
+      }
+    }
+    * { box-sizing:border-box; }
+    html,body { margin:0; padding:0; background:var(--bg); color:var(--ink); font:16px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu; }
+    a { color:var(--accent); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .btn-primary { background-color: var(--btn-bg) !important; color:#fff; }
+
+    /* Veiled UI removed for mobile-only 3D */
+
+    .wrap { max-width:100%; margin:0 auto; padding:0; position:relative; }
+    .wrap.hidden { display:none; opacity:0; }
+    .wrap.visible { display:block; opacity:1; transition:opacity .5s ease-in; }
+    .footer { margin:0; color:#94a3b8; font-size:12px; padding:10px 16px; position:absolute; bottom:0; right:0; left:auto; }
+    .footer #ts { display:none; }
+
+    .stage3d { position:relative; width:100%; height:100vh; min-height:580px; border-top:1px solid var(--border); overflow:hidden; --bgx:30%; --bgy:20%; background:radial-gradient(1200px 600px at var(--bgx) var(--bgy), var(--bg-grad1) 0%, var(--bg-grad2) 60%, var(--bg-grad3) 100%); touch-action:none; }
+    @supports (height: 100svh) { .stage3d { height: 100svh; } }
+    @supports (height: 100dvh) { .stage3d { height: 100dvh; } }
+    .stage3d canvas { position:absolute; inset:0; z-index:0; touch-action:none; pointer-events:none; }
+    .stage3d .css3d { position:absolute; inset:0; z-index:0; touch-action:manipulation; }
+    .hud { position:absolute; inset:0; pointer-events:none; z-index:10; }
+    .hud .brand { position:absolute; top:12px; left:16px; font-family: ui-monospace, Menlo, monospace; font-size:12px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); }
+    /* bigtype removed for Mobile */
+    .hud .fps { position:absolute; bottom:12px; left:16px; color:var(--muted); font-family: ui-monospace, Menlo, monospace; font-size:12px; }
+    .hud .nav-buttons { position:absolute; top:12px; right:16px; display:flex; gap:8px; pointer-events:auto; }
+    .hud .nav-buttons .win98-btn {
+      background: var(--card-bg, var(--card));
+      border: 2px solid var(--terminal-green);
+      border-top-color: var(--terminal-green);
+      border-left-color: var(--terminal-green);
+      border-bottom-color: var(--border);
+      border-right-color: var(--border);
+      color: var(--ink);
+      padding: 2px 8px;
+      text-decoration: none;
+      font-family: 'Tahoma', sans-serif;
+    }
+    .hud .nav-buttons .win98-btn:active {
+      border-top-color: var(--border);
+      border-left-color: var(--border);
+      border-bottom-color: var(--border-strong, var(--border));
+      border-right-color: var(--border-strong, var(--border));
+      position: relative;
+      top: 1px;
+    }
+
+    .card3d { width:720px; /* lock card width; avoid viewport scaling */ background:var(--card-bg); border:2px solid var(--border); border-radius:12px; padding:64px 48px; color:var(--ink);
+      font-family: 'SF Pro Display', 'SF Pro Text', 'San Francisco', 'Noto Sans', 'Roboto', 'Segoe UI', 'Arial', 'Liberation Sans', 'Helvetica Neue', sans-serif;
+      font-size:42px; line-height:1.5; font-weight:700;
+      box-shadow:0 20px 40px rgba(0,0,0,.45); transform:translateZ(0); transition:transform .2s ease, border-color .2s ease, box-shadow .2s ease, opacity .2s ease; position:relative; overflow:hidden; }
+    /* Grain layer disabled for iOS stability */
+    .card3d::before { content:""; position:absolute; inset:0; z-index:0; pointer-events:none; display:none; }
+    /* Extra blur layer (middle) */
+    .card3d::after { content:""; position:absolute; inset:0; z-index:1; pointer-events:none; background: rgba(17,17,17,0.75); }
+    /* iOS lite overrides (stability) */
+    /* unified iOS-optimized baseline */
+    .card3d > * { position:relative; z-index:2; }
+    .card3d h4 { margin:0 0 12px 0; font-size:66px; text-transform:uppercase; letter-spacing:1px; font-weight:900; }
+    .card3d .meta { color:var(--muted); font-size:42px; margin-bottom:12px; font-weight:600; }
+    .card3d .body { max-height:0; overflow:hidden; transition:max-height .35s ease; font-size:32px; line-height:1.7; }
+    .card3d.open .body { max-height:640px; }
+    .card3d.noexpand .body { max-height:none !important; overflow:visible !important; transition:none !important; }
+    .card3d:hover { transform:translateZ(12px) scale(1.03); border-color:var(--accent); box-shadow:0 24px 60px rgba(0,0,0,.55); }
+    .card3d:hover .body { max-height:440px; }
+    .mono { font-family: ui-monospace, Menlo, monospace; }
+    /* Ensure no iframe renders inside cards on Mobile */
+    .card3d iframe { display:none !important; }
+    /* Thumbnail-only video (no iframe)
+       Center play overlay perfectly */
+    .video-thumb { position:relative; display:block; width:100%; aspect-ratio:16/9; border-radius:12px; overflow:hidden; background:#111; text-decoration:none; }
+    .video-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+    .video-thumb .play { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:linear-gradient(transparent, rgba(0,0,0,.35)); color:var(--ink); font-weight:900; font-size:42px; letter-spacing:1px; text-shadow:0 3px 12px rgba(0,0,0,.6); }
+    .video-thumb .play::before { content:""; width:74px; height:74px; border-radius:50%; background:rgba(0,0,0,.35); border:2px solid rgba(255,255,255,.8); position:absolute; }
+
+    .toast { position:fixed; right:16px; bottom:16px; background:var(--card-bg); border:1px solid var(--border); padding:10px 14px; border-radius:12px; opacity:0; transform:translateY(10px); transition:all .25s ease; pointer-events:none; }
+    .toast.show { opacity:1; transform:translateY(0); }
+  </style>
+</head>
+<body>
+  <div class="wrap visible">
+    <div id="stage3d" class="stage3d">
+      <div class="hud">
+        <div class="brand">Minyh Biopage</div>
+
+        <div id="fps" class="fps">fps: --</div>
+        <div class="nav-buttons">
+          <a class="win98-btn btn-primary" href="/index.html">Home</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">© 2025 ⛧<span id="ts"></span></div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/renderers/CSS3DRenderer.js"></script>
+
+  <script>
+  // Util
+  function pad(n){return n.toString().padStart(2,'0')}
+  function stamp(){
+    const now = new Date();
+    const utcMs = now.getTime() + now.getTimezoneOffset() * 60000;
+    const local7 = new Date(utcMs + 7 * 60 * 60 * 1000);
+    const ts = `${local7.getFullYear()}-${pad(local7.getMonth()+1)}-${pad(local7.getDate())} ${pad(local7.getHours())}:${pad(local7.getMinutes())}:${pad(local7.getSeconds())} GMT+7`;
+    const el = document.querySelector('#ts');
+    if (el) el.textContent = ts;
+  }
+  function easeInOutCubic(t){ return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2 }
+  function toast(msg){ const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); clearTimeout(toast._t); toast._t=setTimeout(()=>el.classList.remove('show'),1500); }
+  function esc(s){ return String(s).replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])); }
+  function extractIframeSrc(html){ const m = String(html||'').match(/<iframe[^>]+src=\"([^\"]+)\"/i); return m ? m[1] : null; }
+  function videoLinkAndThumb(src){
+    try{
+      let m = src.match(/youtube\.com\/embed\/([^"\?\/&]+)/i);
+      if (m) {
+        const id = m[1];
+        return { url: `https://www.youtube.com/watch?v=${id}`, thumb: `https://i.ytimg.com/vi/${id}/hqdefault.jpg` };
+      }
+      m = src.match(/drive\.google\.com\/file\/d\/([^\/?]+)/i);
+      if (m) {
+        const id = m[1];
+        return { url: `https://drive.google.com/file/d/${id}/view`, thumb: `https://drive.google.com/thumbnail?id=${id}&sz=w1280` };
+      }
+    } catch {}
+    return { url: src, thumb: null };
+  }
+
+  // Data cloned from Angular CARD_DATA (positions/scales match)
+  const VIDEO_STYLE = { width: '1280px', padding: '32px 16px' };
+const CARD_DATA=[{id:'personal-info-card',title:'ABOUT ME',meta:'Personal Information',body:`<ul><li>Name: Bùi Nguyễn Nhật Minh</li><li>Birthday: August 11th (11/08)</li><li>Title: Internet Retard</li><li>Literal Jack of all trades master of none</li></ul>`,opts:{noexpand:true,style:{width:'1080px'}},layout:{scale:0.6,position:{x:0,y:0,z:0}}},
+{id:'harmony-card',title:'mosi mosi?・yunayu',meta:'mosi mosi?・sasane',body:`<div style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;min-height:320px;"><iframe width="1280" height="720" src="https://www.youtube.com/embed/pPeFh5-MbeQ" frameborder="0" allowfullscreen></iframe></div>`,opts:{noexpand:true,style:VIDEO_STYLE},layout:{scale:0.25,position:{x:0,y:240,z:-666}}},
+{id:'contact-card',title:'Contact',meta:'Direct Contact Info',body:`<ul><li><strong>Email</strong>: <a href="mailto:buinguyennhatminh.neu@gmail.com">buinguyennhatminh.neu@gmail.com</a></li><li><strong>Discord</strong>: rifikaru</li></ul>`,layout:{scale:0.25,position:{x:0,y:-240,z:-150}}},
+{id:'microlife-bts-card',title:'Error On The Dance Floor・Max Repka',meta:'BHGaming Legendary Outro',body:`<div style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;min-height:320px;"><iframe width="1280" height="720" src="https://www.youtube.com/embed/KfuKMbE1seM" frameborder="0" allowfullscreen></iframe></div>`,opts:{noexpand:true,style:VIDEO_STYLE},layout:{scale:0.25,position:{x:240,y:0,z:0}}},
+{id:'external-ids-card',title:'External IDs',meta:'Social Network',body:`<ul>${[{label:'Steam',handle:'rifikaru',url:'https://steamcommunity.com/id/rifikaru/'},{label:'Spotify',handle:'Minh',url:'https://open.spotify.com/user/317klfocuvdjnjb7io7qm3cwbfh4'},{label:'YouTube',handle:'@rifikaru',url:'https://www.youtube.com/@rifikaru'}].map(e=>`<li>${esc(e.label)}: <a href="${e.url}" target="_blank" rel="noopener">${esc(e.handle)}</a></li>`).join('')}</ul>`,layout:{scale:0.25,position:{x:50,y:100,z:0}}},
+{id:'motor-fest-card',title:'DISCORD ACTIVITY',meta:'Profile Presence Data',body:`<div style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;min-height:220px;padding:12px;background:rgba(0,0,0,0.2);border-radius:8px;"><img id="lanyard-live-card" src="https://lanyard.cnrad.dev/api/840199281998299206?hideBadges=true" style="width:100%;max-width:950px;height:auto;display:block;" alt="Discord Profile Presence"></div>`,opts:{noexpand:true,style:VIDEO_STYLE},layout:{scale:0.25,position:{x:0,y:200,z:-600}}},
+{id:'digital-identity-card',title:'Discord Server',meta:'Friends Discord Server',body:`<ul><li><b>Discovery Search</b>: Here We Have Quality Hotpot : Discord edition</li><li><b>Invite Link</b>: <a href="https://discord.com/invite/kdNFAmyzwu" target="_blank" rel="noopener">kdNFAmyzwu</a></li></ul>`,layout:{scale:0.25,position:{x:-150,y:0,z:0}}},
+{id:'mv-le-card',title:'Tiny Little Adiantum',meta:'タイニーリトル・アジアンタム',body:`<div style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;min-height:320px;"><iframe src="https://www.youtube.com/embed/rB7XFQgJHBI" width="1280" height="720" title="Space Walk MamboCore" style="border-radius:12px;border:none;box-shadow:0 4px 24px rgba(0,0,0,0.18);"></iframe></div>`,opts:{noexpand:true,style:VIDEO_STYLE},layout:{scale:0.25,position:{x:0,y:-360,z:0}}},
+{id:'dong-co-lau-card',title:'Chinese Paladin 3 (2009)',meta:'仙剑奇侠传三',body:`<div style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;min-height:320px;"><iframe width="1280" height="720" src="https://www.youtube.com/embed/aKIMsJ5PqpA" frameborder="0" allowfullscreen></iframe></div>`,opts:{noexpand:true,style:VIDEO_STYLE},layout:{scale:0.25,position:{x:-420,y:0,z:-240}}},
+{id:'doraemon-tvc-card',title:'バグ・25時',meta:'バグ・かいりきベア',body:`<div style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;min-height:320px;"><iframe width="1280" height="720" src="https://www.youtube.com/embed/2Ii7UBMxWVw" frameborder="0" allowfullscreen></iframe></div>`,opts:{noexpand:true,style:VIDEO_STYLE},layout:{scale:0.25,position:{x:-240,y:0,z:0}}},
+{id:'ThaiLong-card',title:'Odoriko・Vaundy',meta:'踊り子・Vaundy',body:`<div style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;min-height:320px;"><iframe width="1280" height="720" src="https://www.youtube.com/embed/7HgJIAUtICU" frameborder="0" allowfullscreen></iframe></div>`,opts:{noexpand:true,style:VIDEO_STYLE},manualLayout:true,layout:{scale:0.25,position:{x:360,y:450,z:-150}}},
+{id:'hithegioi-card',title:'黒皇帝・Galaxy Collapse',meta:'平安のエイリアン・ZUN',body:`<div style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;min-height:320px;"><iframe width="1280" height="720" src="https://www.youtube.com/embed/VJFNcHgQ4HM" frameborder="0" allowfullscreen></iframe></div>`,opts:{noexpand:true,style:VIDEO_STYLE},manualLayout:true,layout:{scale:0.25,position:{x:1000,y:400,z:-600}}},
+{id:'daydream-card',title:'Non-breath oblige・PinocchioP',meta:'ノンブレス・オブリージュ',body:`<div style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;min-height:320px;"><iframe width="1280" height="720" src="https://www.youtube.com/embed/lw7pcm1W5tw" frameborder="0" allowfullscreen></iframe></div>`,opts:{noexpand:true,style:VIDEO_STYLE},manualLayout:true,layout:{scale:0.25,position:{x:-600,y:150,z:0}}},
+{id:'2ndchance-card',title:'Lagtrain・Inabakumori',meta:'ラグトレイン・稲葉曇',body:`<div style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;min-height:320px;"><iframe width="1280" height="720" src="https://www.youtube.com/embed/UnIhRpIT7nc" frameborder="0" allowfullscreen></iframe></div>`,opts:{noexpand:true,style:VIDEO_STYLE},manualLayout:true,layout:{scale:0.25,position:{x:-1000,y:420,z:-240}}},
+{id:'PhongNguaDotQuy-card',title:'Kyoufuu All Back・Yukopi',meta:'強風オールバック・Yukopi',body:`<div style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;min-height:320px;"><iframe width="1280" height="720" src="https://www.youtube.com/embed/D6DVTLvOupE" frameborder="0" allowfullscreen></iframe></div>`,opts:{noexpand:true,style:VIDEO_STYLE},manualLayout:true,layout:{scale:0.25,position:{x:700,y:50,z:-300}}}];
+
+
+  
+
+  function buildScene(state){
+    const { container } = state;
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(60, container.clientWidth/container.clientHeight, 0.1, 4000);
+    camera.position.set(0,0,1200);
+    const gl = new THREE.WebGLRenderer({ antialias:true, alpha:true, powerPreference:'high-performance', stencil:false });
+    const applyDpr=()=> { gl.setPixelRatio(1); };
+    applyDpr(); gl.setSize(container.clientWidth, container.clientHeight); container.appendChild(gl.domElement);
+    gl.domElement.addEventListener('webglcontextlost', (e)=>{
+      e.preventDefault();
+      try{ if(state._raf) cancelAnimationFrame(state._raf); state._raf=null; }catch{}
+      try{ state.ctrl.abort(); }catch{}
+      try{ state._ro?.disconnect?.(); }catch{}
+      const msg=document.createElement('div'); msg.className='ctx-lost'; msg.textContent='WebGL context lost. Please reload.';
+      Object.assign(msg.style,{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-50%)',background:'rgba(0,0,0,0.7)',color:'#fff',padding:'12px 16px',borderRadius:'4px',textAlign:'center'});
+      container.appendChild(msg);
+    },{once:true});
+    gl.domElement.addEventListener('webglcontextrestored',()=>{
+      const msg=container.querySelector('.ctx-lost'); if(msg) msg.remove();
+      container.innerHTML='';
+      init3DScene();
+    },{once:true});
+    const css = new THREE.CSS3DRenderer(); css.setSize(container.clientWidth, container.clientHeight); css.domElement.className='css3d'; css.domElement.style.touchAction='auto'; container.appendChild(css.domElement);
+    scene.add(new THREE.AmbientLight(0xffffff,.55)); const point=new THREE.PointLight(0xffffff,.9); point.position.set(420,350,420); scene.add(point);
+    const root=new THREE.Group(); scene.add(root);
+    const controls = new THREE.OrbitControls(camera, css.domElement); controls.enableDamping=true; controls.dampingFactor=0.05; controls.minDistance=0; controls.maxDistance=2200; controls.target.set(0,0,0);
+
+    // background stars (reduced on iOS)
+    const starCount = 1200; const pGeo=new THREE.BufferGeometry(); const pos=new Float32Array(starCount*3);
+    for(let i=0;i<starCount;i++){ const r=260+Math.random()*1000; const a=Math.random()*Math.PI*2; const u=Math.random()*2-1; const phi=Math.acos(u); pos[i*3]=r*Math.cos(a)*Math.sin(phi); pos[i*3+1]=r*Math.sin(a)*Math.sin(phi); pos[i*3+2]=r*Math.cos(phi); }
+    pGeo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+    // Use round sprite texture for particles
+    const particleTexture = (function(){
+      const c=document.createElement('canvas'); c.width=c.height=64; const ctx=c.getContext('2d'); const r=32; const g=ctx.createRadialGradient(r,r,0,r,r,r); g.addColorStop(0,'rgba(255,255,255,1)'); g.addColorStop(0.4,'rgba(255,255,255,1)'); g.addColorStop(1,'rgba(255,255,255,0)'); ctx.fillStyle=g; ctx.fillRect(0,0,64,64); const t=new THREE.CanvasTexture(c); t.needsUpdate=true; return t; })();
+    const pMat=new THREE.PointsMaterial({ size: 2, sizeAttenuation:true, map: particleTexture, transparent:true, opacity:.6, depthWrite:false });
+    const stars=new THREE.Points(pGeo,pMat); scene.add(stars);
+
+    const onResize=()=>{ const w=container.clientWidth, h=container.clientHeight; camera.aspect=w/h; camera.updateProjectionMatrix(); applyDpr(); gl.setSize(w,h); css.setSize(w,h); };
+    window.addEventListener('resize', onResize, { signal: state.ctrl.signal }); const ro=new ResizeObserver(onResize); ro.observe(container); onResize();
+    return { scene,camera,gl,css,controls,root,stars,_ro:ro,_onResize:onResize };
+  }
+
+  function buildCards(state){
+    const objects=[]; const textCache=[];
+    const elFor=(title,meta,body,opts={})=>{ const el=document.createElement('div'); el.className='card3d'; if(opts.noexpand){ el.classList.add('noexpand'); } el.innerHTML=`<h4>${esc(title)}</h4>${meta?`<div class="meta">${esc(meta)}</div>`:''}<div class="body">${body||''}</div>`; if(opts.style){ Object.keys(opts.style).forEach(k=> el.style[k]=opts.style[k]); } return el; };
+    for(const c of CARD_DATA){ let bodyHTML=c.body; const src=extractIframeSrc(bodyHTML); if(src){ const v=videoLinkAndThumb(src); const img = v.thumb ? `<img loading=\"lazy\" src=\"${v.thumb}\" alt=\"${esc(c.title)} thumbnail\">` : ''; bodyHTML = `<a class=\"video-thumb\" href=\"${v.url}\" target=\"_blank\" rel=\"noopener\" onclick=\"event.stopPropagation()\">${img}<div class=\"play\">▶</div></a>`; } const el=elFor(c.title,c.meta,bodyHTML,c.opts||{}); el.id=c.id; const obj=new THREE.CSS3DObject(el); obj.scale.set(c.layout.scale,c.layout.scale,c.layout.scale); obj.cardData=c; state.root.add(obj); objects.push(obj); textCache.push(el.textContent.toLowerCase()); }
+    try {
+      objects.forEach(o => { try { o.element.querySelectorAll('iframe').forEach(n => n.remove()); } catch {} });
+    } catch {}
+    return { objects, textCache };
+  }
+
+  function createLayouts(state){
+    const { objects } = state; const V=THREE.Vector3;
+    const animateTo=(obj,target,dur=650)=>{ const start=obj.position.clone(); const t0=performance.now(); state.tweens.push(now=>{ const t=Math.min(1,(now-t0)/dur); obj.position.lerpVectors(start,target,easeInOutCubic(t)); return t<1; }); };
+    const look=(o,to)=> o.lookAt(to||new V(0,0,0));
+    const applyOffset=(obj,target)=>{ const p=obj.cardData?.layout?.position||{x:0,y:0,z:0}; target.x+=p.x||0; target.y+=p.y||0; target.z+=p.z||0; return target; };
+    return {
+      sphere(){
+        const auto=objects.filter(o=>!o.cardData?.manualLayout); const manual=objects.filter(o=>o.cardData?.manualLayout);
+        const N=auto.length, r=state.radius;
+        for(let i=0;i<N;i++){ const o=auto[i]; const phi=Math.acos(-1+(2*i)/N); const theta=Math.sqrt(N*Math.PI)*phi; let target=new V(r*Math.cos(theta)*Math.sin(phi), r*Math.sin(theta)*Math.sin(phi), r*Math.cos(phi)); target=applyOffset(o,target); animateTo(o,target); look(o); }
+        for(const o of manual){ const p=o.cardData.layout.position; const target=new V(p.x,p.y,p.z); animateTo(o,target); look(o); }
+      }
+    };
+  }
+
+  function interactions(state){ const {ctrl, css, container}=state; let mQueued=false, mX=0,mY=0;
+    state.objects.forEach(o=>{ 
+      o.element.addEventListener('mouseenter', ()=>{ o.element.style.borderColor = 'var(--accent)'; }, { signal: ctrl.signal }); 
+      o.element.addEventListener('mouseleave', ()=>{ o.element.style.borderColor = 'var(--border)'; }, { signal: ctrl.signal }); 
+      const isExpandable = !o.element.classList.contains('noexpand');
+      const handleToggle = (e)=>{ try{ if (e && e.target && e.target.closest && e.target.closest('a')) return; }catch{} if(isExpandable){ o.element.classList.toggle('open'); } };
+      // Treat click as tap fallback
+      o.element.addEventListener('click', handleToggle, { signal: ctrl.signal });
+      // Precise tap detection + temporarily disable controls to avoid swallowing tap
+      o.element.addEventListener('pointerdown', (e)=>{
+        o.__down = { x: e.clientX || 0, y: e.clientY || 0, t: performance.now() };
+        try{ if(state.controls) state.controls.enabled = false; }catch{}
+      }, { signal: ctrl.signal });
+      o.element.addEventListener('pointercancel', ()=>{ try{ if(state.controls) state.controls.enabled = true; }catch{} }, { signal: ctrl.signal });
+      o.element.addEventListener('pointerup', (e)=>{
+        try{ setTimeout(()=>{ if(state.controls) state.controls.enabled = true; }, 60); }catch{}
+        const d = o.__down; o.__down = null;
+        if(!d) return;
+        const dx = Math.abs((e.clientX||0) - d.x);
+        const dy = Math.abs((e.clientY||0) - d.y);
+        const dt = performance.now() - d.t;
+        if (dx < 8 && dy < 8 && dt < 280) handleToggle(e);
+      }, { signal: ctrl.signal });
+
+      // Make anchors inside cards reliably clickable on mobile (prevent OrbitControls from swallowing the gesture)
+      const anchors = o.element.querySelectorAll('a');
+      anchors.forEach((a)=>{
+        const stop = (e)=>{ try{ e.stopPropagation(); if(e.stopImmediatePropagation) e.stopImmediatePropagation(); }catch{} };
+        a.addEventListener('pointerdown', stop, { passive:false, signal: ctrl.signal });
+        a.addEventListener('touchstart', stop, { passive:false, signal: ctrl.signal });
+        a.addEventListener('click', (e)=>{ 
+          stop(e);
+          try{ e.preventDefault(); }catch{}
+          const href = a.getAttribute('href');
+          if(href){ try{ window.open(href, '_blank', 'noopener'); }catch{} }
+        }, { passive:false, signal: ctrl.signal });
+      });
+    }); 
+  }
+
+  function tweenVec3(state, vec, to, dur=700){ const s=vec.clone?vec.clone():new THREE.Vector3(vec.x,vec.y,vec.z); const t0=performance.now(); state.tweens.push(now=>{ const t=Math.min(1,(now-t0)/dur); const k=easeInOutCubic(t); vec.set(s.x+(to.x-s.x)*k, s.y+(to.y-s.y)*k, s.z+(to.z-s.z)*k); return t<1; }); }
+  function animateCameraZ(state, camera, fromZ, toZ, dur=800){ const start=fromZ, d=toZ-fromZ, t0=performance.now(); camera.position.z=start; state.tweens.push(now=>{ const t=Math.min(1,(now-t0)/dur); camera.position.z = start + d* easeInOutCubic(t); return t<1; }); }
+  function focusObject(state,o){ const target=o.position.clone(); const camDir=state.camera.position.clone().sub(state.controls.target).normalize(); const camPos=target.clone().add(camDir.multiplyScalar(600)); tweenVec3(state, state.controls.target, target, 700); tweenVec3(state, state.camera.position, camPos, 700); }
+  
+
+  function startLoop(state){
+    const {controls, gl, css, scene, camera} = state;
+    let last = performance.now(), acc = 0, frames = 0, lowAcc = 0, hiAcc = 0;
+    const fpsEl = document.getElementById('fps');
+    const tilt = () => {
+      const { mx, my, root, autoRotate } = state;
+      root.rotation.y += (mx * 0.35 - root.rotation.y) * 0.04;
+      root.rotation.x += (-my * 0.25 - root.rotation.x) * 0.04;
+      if (autoRotate) { root.rotation.y += 0.002; }
+    };
+    (function animate(){
+      state._raf = requestAnimationFrame(animate);
+      if (document.hidden) return;
+      controls.update();
+      tilt();
+      // Animate particles: gentle rotation only (iOS-safe)
+      if (state.stars) {
+        try {
+          state.stars.rotation.y += 0.00025;
+          state.stars.rotation.x += 0.00005;
+        } catch {}
+      }
+      // Face camera every frame (billboard like PC version)
+      if (state.objects && camera) {
+        const camPos = camera.position.clone();
+        for (const o of state.objects) { try { o.lookAt(camPos); } catch {} }
+      }
+      if (state.tweens && state.tweens.length) {
+        const now = performance.now();
+        state.tweens = state.tweens.filter(fn => { try { return fn(now); } catch { return false; } });
+      }
+      gl.render(scene, camera);
+      css.render(scene, camera);
+      const now2 = performance.now();
+      const dt = now2 - last; last = now2; acc += dt; frames++;
+      if (acc > 500) {
+        const fps = Math.round(1000 / (acc / frames));
+        if (fpsEl) fpsEl.textContent = 'fps: ' + fps;
+        if (fps < 30) { lowAcc += acc; hiAcc = 0; }
+        else if (fps > 50) { hiAcc += acc; lowAcc = 0; }
+        else { lowAcc = hiAcc = 0; }
+        if (lowAcc > 1200 && state.dprTarget > 1) { state.dprTarget = 1; if (state._onResize) state._onResize(); lowAcc = 0; }
+        acc = 0; frames = 0;
+      }
+    })();
+  }
+
+  function init3DScene(){ const wrap=document.querySelector('.wrap'); wrap.classList.add('three-active'); const container=document.getElementById('stage3d'); if(!window.THREE||!THREE.OrbitControls||!THREE.CSS3DRenderer){ const fb=document.createElement('div'); fb.style.padding='16px'; fb.innerHTML='<h3>Fallback</h3><p>3D libs unavailable.</p>'; container.appendChild(fb); return; }
+    const state={ ctrl:new AbortController(), dprTarget: 1, container, wrap, radius:560, layout:'sphere', autoRotate:true, focused:null, textCache:[], mx:0, my:0, tweens:[], _raf:null, _ro:null };
+    Object.assign(state, buildScene(state)); Object.assign(state, buildCards(state)); state.layouts = createLayouts(state); state.applyLayout=(name)=>{ state.layout=name; (state.layouts[name]||state.layouts.sphere).call(state.layouts); }; interactions(state); animateCameraZ(state, state.camera, 900, 1240, 900); state.applyLayout('sphere'); startLoop(state); }
+
+  function boot(){ init3DScene(); stamp(); try{ window.__tsInterval = setInterval(stamp, 1000); }catch{} }
+  window.addEventListener('DOMContentLoaded', boot);
+  </script>
+</body>
+</html>

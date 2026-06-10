@@ -1,0 +1,33 @@
+{
+  "name": "minato-makoto-|-interactive-portfolio",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "ng serve",
+    "build": "npm run tailwind && ng build",
+    "tailwind": "tailwindcss -i src/styles.css -o styles.css --minify",
+    "preview": "ng serve --configuration=production",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@angular/build": "^20.1.0",
+    "@angular/cli": "^20.1.0",
+    "@angular/common": "^20.1.0",
+    "@angular/compiler": "^20.1.0",
+    "@angular/compiler-cli": "^20.1.0",
+    "@angular/core": "^20.1.0",
+    "@angular/forms": "^20.1.6-0",
+    "@angular/platform-browser": "^20.1.0",
+    "rxjs": "^7.8.2",
+    "tailwindcss": "^3.4.1"
+  },
+  "devDependencies": {
+    "@analogjs/vite-plugin-angular": "^1.20.2",
+    "@types/node": "^22.14.0",
+    "jsdom": "^26.1.0",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0",
+    "vitest": "^3.2.4"
+  }
+}

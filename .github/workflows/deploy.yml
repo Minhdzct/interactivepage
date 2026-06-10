@@ -1,0 +1,52 @@
+# Tên file: .github/workflows/deploy.yml
+name: Build and Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # Chỉ deploy khi có thay đổi trên nhánh main
+      
+# Phân quyền cho workflow để ghi vào GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Bước 1: Checkout code từ repo về
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Bước 2: Thiết lập môi trường Node.js để chạy lệnh Angular
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Dùng phiên bản Node.js 20
+          cache: 'npm'       # Bật cache để lần sau chạy nhanh hơn
+
+      # Bước 3: Cài đặt các "nguyên liệu" cần thiết từ package.json
+      - name: Install Dependencies
+        run: npm install
+
+      # Bước 4: "Xây dựng" trang web. Lệnh này sẽ tạo ra thư mục "dist"
+      - name: Build Angular Project
+        run: npm run build -- --configuration production --base-href /
+
+      # Bước 5: Cấu hình GitHub Pages
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      # Bước 6: Tải artifact (kết quả build) lên từ đúng thư mục "dist"
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Đường dẫn ĐÃ ĐƯỢC SỬA LẠI cho chính xác
+          path: './dist'
+
+      # Bước 7: Deploy lên GitHub Pages
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

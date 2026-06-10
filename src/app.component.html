@@ -1,0 +1,53 @@
+<!-- Veiled State -->
+<div #veiledContainer id="veiled-container" [class.activating]="isActivating() || isMobileActivating()">
+  <!-- Background Animation -->
+  <div class="background-formulas">
+    @for (formula of backgroundFormulas(); track formula.id) {
+      <span
+        class="math-formula"
+        [style.top]="formula.top"
+        [style.left]="formula.left"
+        [class.visible]="formula.isVisible()"
+        [class.fading-out]="formula.isFadingOut()">
+        {{ formula.typedText() }}
+      </span>
+    }
+  </div>
+
+  <div class="nav-buttons">
+    <a href="/index.html" class="win98-btn btn-primary">Home</a>
+  </div>
+
+  <div #titleVeiled class="title-veiled">&nbsp;</div>
+  <div class="badge-veiled"> So you want to know about me? Let's see what I can show you... </div>
+  <span #kaoVeiled id="kao-veiled" class="kao" [class.spinning]="isActivating() || isMobileActivating()">⛧</span>
+  <button #btnActivate id="btn-activate" type="button" [disabled]="isActivating()">
+    @if (isActivating()) {
+      CONNECTING...
+    } @else {
+      PC Version
+    }
+  </button>
+  <button #btnMobile id="btn-mobile" type="button" [disabled]="isMobileActivating()" aria-label="Open Mobile Version">
+    @if (isMobileActivating()) {
+      CONNECTING...
+    } @else {
+      Mobile Version
+    }
+  </button>
+</div>
+
+<!-- Activated State (3D UI) -->
+<div #appWrap class="wrap hidden">
+  <div #stage3d id="stage3d" class="stage3d">
+    <div class="hud">
+      <div class="brand">Minyh Biopage</div>
+      <div class="nav-buttons">
+        <a href="/index.html" class="win98-btn btn-primary">Home</a>
+      </div>
+      <div #fps id="fps" class="fps">fps: --</div>
+    </div>
+  </div>
+  <div class="footer">© 2026 ⛧</div>
+</div>
+
