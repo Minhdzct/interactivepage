@@ -138,13 +138,13 @@
       <div class="hud">
         <div class="brand">Minyh Biopage</div>
 
-        <div id="fps" class="fps">fps: --</div>
+        <div id="fps" class="fps">fps: -- / If any appears glitching, switch to Desktop View!</div>
         <div class="nav-buttons">
           <a class="win98-btn btn-primary" href="/index.html">Home</a>
         </div>
       </div>
     </div>
-    <div class="footer">© 2025 ⛧<span id="ts"></span></div>
+    <div class="footer">© 2026 ⛧<span id="ts"></span></div>
   </div>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -187,17 +187,17 @@
   // Data cloned from Angular CARD_DATA (positions/scales match)
   const VIDEO_STYLE = { width: '1280px', padding: '32px 16px' };
 const CARD_DATA=[{id:'personal-info-card',title:'ABOUT ME',meta:'Personal Information',body:`<ul><li>Name: Bùi Nguyễn Nhật Minh</li><li>Birthday: August 11th (11/08)</li><li>Title: Internet Retard</li><li>Literal Jack of all trades master of none</li></ul>`,opts:{noexpand:true,style:{width:'1080px'}},layout:{scale:0.6,position:{x:0,y:0,z:0}}},
-{id:'harmony-card',title:'mosi mosi?・yunayu',meta:'mosi mosi?・sasane',body:`<div style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;min-height:320px;"><iframe width="1280" height="720" src="" frameborder="0" allowfullscreen></iframe></div>`,opts:{noexpand:true,style:VIDEO_STYLE},layout:{scale:0.25,position:{x:0,y:240,z:-666}}},
+{id:'harmony-card',title:'mosi mosi?・yunayu',meta:'mosi mosi?・sasane',body:`<div style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;min-height:320px;"><iframe width="1280" height="720" src="https://www.youtube.com/embed/pPeFh5-MbeQ" frameborder="0" allowfullscreen></iframe></div>`,opts:{noexpand:true,style:VIDEO_STYLE},layout:{scale:0.25,position:{x:0,y:240,z:-666}}},
 {id:'contact-card',title:'Contact',meta:'Direct Contact Info',body:`<ul><li><strong>Email</strong>: <a href="mailto:buinguyennhatminh.neu@gmail.com">buinguyennhatminh.neu@gmail.com</a></li><li><strong>Discord</strong>: rifikaru</li></ul>`,layout:{scale:0.25,position:{x:0,y:-240,z:-150}}},
-{id:'microlife-bts-card',title:'Error On The Dance Floor・Max Repka',meta:'BHGaming Legendary Outro',body:`<div style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;min-height:320px;"><iframe width="1280" height="720" src="" frameborder="0" allowfullscreen></iframe></div>`,opts:{noexpand:true,style:VIDEO_STYLE},layout:{scale:0.25,position:{x:240,y:0,z:0}}},
+{id:'microlife-bts-card',title:'Error On The Dance Floor・Max Repka',meta:'BHGaming Legendary Outro',body:`<div style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;min-height:320px;"><iframe width="1280" height="720" src="https://www.youtube.com/embed/KfuKMbE1seM" frameborder="0" allowfullscreen></iframe></div>`,opts:{noexpand:true,style:VIDEO_STYLE},layout:{scale:0.25,position:{x:240,y:0,z:0}}},
 {id:'external-ids-card',title:'External IDs',meta:'Social Network',body:`<ul>${[{label:'Steam',handle:'rifikaru',url:'https://steamcommunity.com/id/rifikaru/'},{label:'Spotify',handle:'Minh',url:'https://open.spotify.com/user/317klfocuvdjnjb7io7qm3cwbfh4'},{label:'YouTube',handle:'@rifikaru',url:'https://www.youtube.com/@rifikaru'}].map(e=>`<li>${esc(e.label)}: <a href="${e.url}" target="_blank" rel="noopener">${esc(e.handle)}</a></li>`).join('')}</ul>`,layout:{scale:0.25,position:{x:50,y:100,z:0}}},
 {id:'motor-fest-card',title:'DISCORD ACTIVITY',meta:'Profile Presence Data',body:`<div style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;min-height:220px;padding:12px;background:rgba(0,0,0,0.2);border-radius:8px;"><img id="lanyard-live-card" src="https://lanyard.cnrad.dev/api/840199281998299206?hideBadges=true" style="width:100%;max-width:950px;height:auto;display:block;" alt="Discord Profile Presence"></div>`,opts:{noexpand:true,style:VIDEO_STYLE},layout:{scale:0.25,position:{x:0,y:200,z:-600}}},
 {id:'digital-identity-card',title:'Discord Server',meta:'Friends Discord Server',body:`<ul><li><b>Discovery Search</b>: Here We Have Quality Hotpot : Discord edition</li><li><b>Invite Link</b>: <a href="https://discord.com/invite/kdNFAmyzwu" target="_blank" rel="noopener">kdNFAmyzwu</a></li></ul>`,layout:{scale:0.25,position:{x:-150,y:0,z:0}}},
 {id:'mv-le-card',title:'Tiny Little Adiantum',meta:'タイニーリトル・アジアンタム',body:`<div style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;min-height:320px;"><iframe src="https://www.youtube.com/embed/rB7XFQgJHBI" width="1280" height="720" title="Space Walk MamboCore" style="border-radius:12px;border:none;box-shadow:0 4px 24px rgba(0,0,0,0.18);"></iframe></div>`,opts:{noexpand:true,style:VIDEO_STYLE},layout:{scale:0.25,position:{x:0,y:-360,z:0}}},
-{id:'dong-co-lau-card',title:'Chinese Paladin 3 (2009)',meta:'仙剑奇侠传三',body:`<div style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;min-height:320px;"><iframe width="1280" height="720" src="" frameborder="0" allowfullscreen></iframe></div>`,opts:{noexpand:true,style:VIDEO_STYLE},layout:{scale:0.25,position:{x:-420,y:0,z:-240}}},
+{id:'dong-co-lau-card',title:'Chinese Paladin 3 (2009)',meta:'仙剑奇侠传三',body:`<div style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;min-height:320px;"><iframe width="1280" height="720" src="https://www.youtube.com/embed/aKIMsJ5PqpA" frameborder="0" allowfullscreen></iframe></div>`,opts:{noexpand:true,style:VIDEO_STYLE},layout:{scale:0.25,position:{x:-420,y:0,z:-240}}},
 {id:'doraemon-tvc-card',title:'バグ・25時',meta:'バグ・かいりきベア',body:`<div style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;min-height:320px;"><iframe width="1280" height="720" src="https://www.youtube.com/embed/2Ii7UBMxWVw" frameborder="0" allowfullscreen></iframe></div>`,opts:{noexpand:true,style:VIDEO_STYLE},layout:{scale:0.25,position:{x:-240,y:0,z:0}}},
 {id:'ThaiLong-card',title:'Odoriko・Vaundy',meta:'踊り子・Vaundy',body:`<div style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;min-height:320px;"><iframe width="1280" height="720" src="https://www.youtube.com/embed/7HgJIAUtICU" frameborder="0" allowfullscreen></iframe></div>`,opts:{noexpand:true,style:VIDEO_STYLE},manualLayout:true,layout:{scale:0.25,position:{x:360,y:450,z:-150}}},
-{id:'hithegioi-card',title:'黒皇帝・Galaxy Collapse',meta:'平安のエイリアン・ZUN',body:`<div style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;min-height:320px;"><iframe width="1280" height="720" src="" frameborder="0" allowfullscreen></iframe></div>`,opts:{noexpand:true,style:VIDEO_STYLE},manualLayout:true,layout:{scale:0.25,position:{x:1000,y:400,z:-600}}},
+{id:'hithegioi-card',title:'黒皇帝・Galaxy Collapse',meta:'平安のエイリアン・ZUN',body:`<div style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;min-height:320px;"><iframe width="1280" height="720" src="https://www.youtube.com/embed/VJFNcHgQ4HM" frameborder="0" allowfullscreen></iframe></div>`,opts:{noexpand:true,style:VIDEO_STYLE},manualLayout:true,layout:{scale:0.25,position:{x:1000,y:400,z:-600}}},
 {id:'daydream-card',title:'Non-breath oblige・PinocchioP',meta:'ノンブレス・オブリージュ',body:`<div style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;min-height:320px;"><iframe width="1280" height="720" src="https://www.youtube.com/embed/lw7pcm1W5tw" frameborder="0" allowfullscreen></iframe></div>`,opts:{noexpand:true,style:VIDEO_STYLE},manualLayout:true,layout:{scale:0.25,position:{x:-600,y:150,z:0}}},
 {id:'2ndchance-card',title:'Lagtrain・Inabakumori',meta:'ラグトレイン・稲葉曇',body:`<div style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;min-height:320px;"><iframe width="1280" height="720" src="https://www.youtube.com/embed/UnIhRpIT7nc" frameborder="0" allowfullscreen></iframe></div>`,opts:{noexpand:true,style:VIDEO_STYLE},manualLayout:true,layout:{scale:0.25,position:{x:-1000,y:420,z:-240}}},
 {id:'PhongNguaDotQuy-card',title:'Kyoufuu All Back・Yukopi',meta:'強風オールバック・Yukopi',body:`<div style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;min-height:320px;"><iframe width="1280" height="720" src="https://www.youtube.com/embed/D6DVTLvOupE" frameborder="0" allowfullscreen></iframe></div>`,opts:{noexpand:true,style:VIDEO_STYLE},manualLayout:true,layout:{scale:0.25,position:{x:700,y:50,z:-300}}}];
@@ -371,5 +371,13 @@ const CARD_DATA=[{id:'personal-info-card',title:'ABOUT ME',meta:'Personal Inform
   function boot(){ init3DScene(); stamp(); try{ window.__tsInterval = setInterval(stamp, 1000); }catch{} }
   window.addEventListener('DOMContentLoaded', boot);
   </script>
+<script>
+const img = document.getElementById("lanyard-live-card");
+
+// reload ảnh mỗi 1 giây
+setInterval(() => {
+  img.src = `https://lanyard.cnrad.dev/api/840199281998299206?hideBadges=true&t=${Date.now()}`;
+}, 5000);
+</script>
 </body>
 </html>
